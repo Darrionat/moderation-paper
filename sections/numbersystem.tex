@@ -20,7 +20,7 @@ The \class{Rational} is the backbone of the numerical system within MatrixLib.
 Rational numbers are the foundation for other numerical systems in MatrixLib.
 Within MatrixLib, the \class{Rational} class is designed for speed and ease of use.
 Since the \class{Rational} will serve as the foundation for any other numerical systems within MatrixLib, it needed to promise speed.
-While using the operational methods, this class directly accesses private class fields instead of "getters/setters" in order to access information promptly.
+While using the operational methods, this class directly accesses private class fields instead of ``getters/setters'' in order to access information promptly.
 This class is based upon \class{BigInteger}, a utility provided by Java which allows more integers to be represented than primitive types.
 One of its constructors, for example, is \inlinecode{Rational(BigInteger numerator, BigInteger denominator)}.
 
@@ -63,7 +63,7 @@ The result initially is equal to $1$.
 Each iteration then multiplies this result by the calculated value of that position if the bit value is $1$.
 After this loop, the result is finished calculating, and returned.
 
-This may seem like a pretty big "info dump," so let's work through an example.
+This may seem like a pretty big ``info dump,'' so let's work through an example.
 Say we want to calculate $5^{55}$.
 As we know from before, $55$ as a binary string is $110111$.
 Therefore, $5^{55} = 5^{32} \cdot 5^{16} \cdot 5^4 \cdot 5^2 \cdot 5^1$.
