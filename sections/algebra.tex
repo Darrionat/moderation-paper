@@ -1,0 +1,47 @@
+% The Expression
+% Syntax exception thrown when initializing expression
+As we have seen before, MatrixLib contains its own numerical system and support for different types of matrices.
+In addition to this, MatrixLib also allows for the representation of numerical values through expressions.
+These expressions contain mathematical operations and values that are supported by the MatrixLib numerical system, so rationals and complex values.
+An expression could be as simple as $2+2$.
+
+\subsection*{Operations}
+To understand how to properly create an expression, one must know the operations of the expression first.
+The \class{Operation} enum currently has five different values:
+\inlinecode{ADD}, \inlinecode{SUBTRACT}, \inlinecode{MULTIPLY}, \inlinecode{DIVIDE}, and \inlinecode{POW}.
+The operators of these values are $+, -, *, /,$ and \^{} respectively.
+These five operators represent the same methods that we saw earlier in the \class{Operable} interface.
+Each \class{Operation} value has its own string to represent its operator.
+Two quantities can be evaluated through this enum as well.
+For example, \inlinecode{Operator.MULTIPLY.getResult(a,b)} where $a$ and $b$ are both quantities.
+This would be the same as performing \inlinecode{a.multiply(b)}.
+
+\subsection*{Creating an Expression}
+These expressions can be created with the \class{Expression} class and instantiated with the static \inlinecode{Expression\#buildExpression(String)} method.
+There is no public constructor for the \class{Expression}, but instead, it is required that this builder method.
+% Formatting
+When a string, is fed, it must have proper syntax and only valid operators.
+In essence, the expression must be formatted in such a way that there are never two adjacent operators,
+there may not be more right parentheses than left parentheses, and an operator may never start or end an expression.
+
+% Evaluating an expression
+\subsection*{The Interpreter}
+An expression alone is to no use, for we do not know its value.
+This is where the \class{Interpreter} is a vital piece to the \class{Expression}.
+All methods within the \class{Interpreter} class are static and package-visible or private.
+So an expression can be only be evaluated as a \class{Quantity} by using the \inlinecode{Expression\#evaluate()} method.
+
+% Interpreter process
+When the interpreter runs, it utilizes a recursive process while abiding by the order of operations.
+If there are no parentheses, the expression is read and the typical order of operations takes place.
+If there are parentheses, the Interpreter will first look for pairs of parentheses, finding the deepest set of parentheses.
+The sub-expression found within this set of parentheses is then evaluated, and the original sub-expression and parentheses are replaced by this value.
+If parentheses are used to multiply, the interpreter will insert the multiplication operator within the expression's string.
+The resulting expression is then evaluated recursively until there are no more sets of parentheses.
+Thus, the expression can be directly evaluated just as the sub-expressions had been prior.
+
+\subsection*{Variables}
+Currently, MatrixLib has no support for variables.
+The current reason is that the addition of algebraic variables could propose a great complexity and the task has not yet been taken on.
+In addition to this, there would be a great number of algebraic manipulations that would have to be considered as well.
+In the future, this task may be taken on; however, MatrixLib currently only supports direct computations.

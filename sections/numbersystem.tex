@@ -1,0 +1,95 @@
+MatrixLib makes use of a custom number system.
+This system is centered around the abstract class, \class{Quantity}.
+\class{Quantity} is an immutable data structure that represents a mathematical quantity or set of numbers.
+It also implements multiple interfaces, including one named \class{Operable}.
+The \class{Operable} interface contains the following abstract methods:
+\inlinecode{add(Quantity)}, \inlinecode{subtract(Quantity)}, \inlinecode{multiply(Quantity)},
+\inlinecode{divide(Quantity)}, \inlinecode{pow(int)}, \inlinecode{negate()}, \inlinecode{zero()}.
+Since \class{Quantity} is an abstract class that is inherited,
+it actually does not implement the methods from \class{Operable} - besides \inlinecode{pow(int)} which will be mentioned later.
+All of these methods return a \class{Quantity} except \inlinecode{zero()} which returns a \inlinecode{boolean}.
+General assumptions based upon the method signatures are most likely accurate, but for further detail, see the JavaDocs.
+
+Currently, the \class{Quantity} superclass is inherited in both the \class{Rational} and \class{Complex} data structures.
+This polymorphic approach allows for many benefits such as compatibility, using interface methods instead of class methods, etc.
+Creating a numerical data structure serves a few key problems: speed of computation, memory usage, and ease of use.
+All three will be addressed in the following.
+
+\subsection*{Rational}
+The \class{Rational} is the backbone of the numerical system within MatrixLib.
+Rational numbers are the foundation for other numerical systems in MatrixLib.
+Within MatrixLib, the \class{Rational} class is designed for speed and ease of use.
+Since the \class{Rational} will serve as the foundation for any other numerical systems within MatrixLib, it needed to promise speed.
+While using the operational methods, this class directly accesses private class fields instead of "getters/setters" in order to access information promptly.
+This class is based upon \class{BigInteger}, a utility provided by Java which allows more integers to be represented than primitive types.
+One of its constructors, for example, is \inlinecode{Rational(BigInteger numerator, BigInteger denominator)}.
+
+The \class{Rational} class allows for simple operations, such as addition, subtraction, multiplication, and division.
+In addition to these operations, it also is able to perform exponentiation.
+There are a few more, but they are more specific and can be seen within the library.
+As you may have already noticed, not all real numbers can be represented.
+This includes real numbers such as $\sqrt{2}$.
+The lack of implementation for representation of all real numbers is currently due to the lack of necessity.
+However, since MatrixLib is open-sourced, so it is quite simple for one to contribute a data structure that represents real numbers.
+
+\subsection*{Complex}
+The \class{Complex} class is another data type that represents a \class{Quantity}, although it represents imaginary values as well.
+The \class{Complex} value can be represented as $a+bi$ where $a$ and $b$ are both \class{Rational}s.
+The beautiful part about the representation of complex numbers is that they can also represent a real value.
+In a case where $b=0$, the method, \inlinecode{Complex\#toRational()} can always be used - of course, if the complex value is non-real, an exception will be thrown.
+Also, the \class{Complex} structure uses the \inlinecode{pow(int)} method from \class{Quantity} - this will be explained soon.
+The \class{Complex} data structure is as simple as creating two different rationals and then constructing a new instance.
+This data structure also allows for the same sort of operations as \class{Rational}, but with its own object.
+
+\subsection*{Computations}
+Having more than one type of \class{Quantity} arises the issue of compatibility.
+Therefore, each data structure's operations take into account the type of \class{Quantity} being processed and how to behave from that.
+For example, let $x$ be a \class{Rational} instance and $y$ be a \class{Complex} instance.
+When \inlinecode{x.add(y)} is executed, the method will return a \class{Quantity} of \class{Complex} typing.
+
+% quantity having a default pow
+As previously mentioned, the only operation that \class{Quantity} overrides from \class{Operable} is \inlinecode{pow(int)}.
+This is because MatrixLib contains a custom algorithm that handles exponentiation if a data type does already define one (as \class{Rational} does).
+Each \class{Quantity} has a \inlinecode{HashMap<Integer, Quantity>} that represents its powers.
+When the \inlinecode{pow(int)} method is called, it puts the powers of $0$ and $1$ into the map.
+This is because their values are already known, one and the quantity itself, respectively.
+It then converts the given \inlinecode{int} into a binary representation of that integer.
+For example, $55 = 32+16+(0)8+4+2+1 \implies 110111$.
+There are then two loops that run.
+The first loops through the binary string, starting from the second to the last character, and moves towards the beginning of the string.
+For each character, it will calculate that power of two, regardless of the bit value at that location.
+The second then loops through the entire binary starting at the beginning.
+The result initially is equal to $1$.
+Each iteration then multiplies this result by the calculated value of that position if the bit value is $1$.
+After this loop, the result is finished calculating, and returned.
+
+This may seem like a pretty big "info dump," so let's work through an example.
+Say we want to calculate $5^{55}$.
+As we know from before, $55$ as a binary string is $110111$.
+Therefore, $5^{55} = 5^{32} \cdot 5^{16} \cdot 5^4 \cdot 5^2 \cdot 5^1$.
+Since we already know that $5^1$ is $5$, we can then just square each power to obtain the next.
+As one can see, this process allows for an extremely quick calculation.
+
+Rationals, however, do not use the default method for exponentiation.
+% default BigInteger.pow(int)
+They instead utilize a method from \class{BigInteger}.
+Moreover, this algorithm works especially well with \class{Complex} values.
+% this may seem like a lot of nonsense so give example of 2^55
+Let $a+bi$ and $c+di$ be two different complex values where $a,b,c,d$ are rationals.
+Here it is shown that regardless of the values, we already know the product of the two complex values.
+
+\[
+    (a+bi)(c+di) = ac+adi+bci+bdi^2
+\]
+
+\[
+    \implies ac+bdi^2+adi+bci
+\]
+
+\[
+    \implies (ac - bd) + (ad + bc)i
+\]
+
+Since $a,b,c,$ and $d$ are all rationals, we can quickly compute the product of two complex values.
+Thus, a minimal amount of computations are performed, and when they are performed, the computations are efficient.
+This is exactly why the exponentiation algorithm in \class{Quantity} can be performed efficiently for complex numbers.

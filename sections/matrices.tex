@@ -1,0 +1,53 @@
+Matrices were the main focus when designing MatrixLib.
+However, these matrices could have contained any sort of data structure, which is why the numerical system was created.
+The library supports any sort of $m\times n$ matrix where $m$ and $n$ are positive integers.
+This starts with the abstract class \class{OperableMatrix}.
+The \class{OperableMatrix} represents a two-dimensional array of quantities.
+It is able to perform basic operations such as changing values within the matrix, row/column swaps, scaling a row/column, taking row sums, etc.
+Since the \class{OperableMatrix} is based upon a two-dimensional array, getting/setting row values is faster than getting/setting.
+This is due to the array being in the form of \inlinecode{Quantity[rows][row\_values]}.
+This is purely a design choice and could easily be reversed if wanted.
+
+\subsection*{The MatrixBuilder}
+% Matrix representation, loading/saving
+MatrixLib contains a built-in way to parse matrices from strings.
+This creates a convenience when loading or saving matrices from files or other use cases.
+Utilizing the \inlinecode{OperableMatrix\#toString()} method, a matrix will be returned as a string.
+The \class{MatrixBuilder} can be utilized for parsing matrices from strings.
+Here, the \inlinecode{MatrixBuilder\#parseMatrix(String)} builds a matrix from a given input.
+Of course, if the input is formatted incorrectly, exceptions will be thrown.
+Here is an example of the string formatting,
+
+\[
+    \begin{bmatrix}
+        1 & 2 \\3&4
+    \end{bmatrix}
+    \iff
+    [\{1,2\};\{3,4\}].
+\]
+
+It can be seen that the left and right brackets are almost useless information within the string format of the matrix.
+Since it is only two characters, they are kept as a convenience and could be used to separate multiple matrices.
+Within the project's test folder, there are multiple methods of saving and loading matrices implemented for testing, including compression handling and saving to a CSV file.
+
+\subsection*{Matrix Operations}
+%matrix being iterable
+The \class{Matrix} class inherits the \class{OperableMatrix} superclass.
+Currently, \class{Matrix} is the only subclass of \class{OperableMatrix}; however, it allows for a more modularized approach.
+The \class{Matrix} data structure is designed for adding more operations to the matrix and allowing it to interact with other matrices.
+These operations include methods such as row echelon form, reduced row echelon form, matrix multiplication, scaling, and performing entry-wise sums between matrices.
+
+\subsection*{Other Types of Matrices}
+There are other, more specialized, types of matrices within MatrixLib as well.
+The \class{SquareMatrix} class is a subclass of \class{Matrix}.
+Unlike its parent, it must have equal dimensions for its column(s) and row(s).
+In addition, this class inherits all of the methods from before.
+The \class{SquareMatrix} is able to calculate the determinant of the matrix and give a boolean value of its triangularity - the state of being triangular.
+The \inlinecode{SquareMatrix\#det()} method creates a clone of the matrix instance, puts the clone into REF, and then takes the product of all pivots.
+
+The second type of specialized matrix is the \class{IdentityMatrix}.
+The \class{IdentityMatrix} is a subclass of \class{SquareMatrix}.
+This type of matrix will only have ones across its diagonal and all other values are zero.
+This class is \textbf{final}, therefore it cannot have subclasses.
+This is because the \class{IdentityMatrix} is intended to be immutable.
+The identity matrix can be utilized in computations such as obtaining the characteristic polynomial of a square matrix.

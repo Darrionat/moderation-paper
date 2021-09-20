@@ -1,0 +1,52 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{fullpage}
+\usepackage[top=2cm, bottom=4.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+
+\usepackage{subfiles} % Best loaded last in the preamble
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Rn}[1]{\R^{#1}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Hquad}{\hspace{0.5em}} 
+
+% Java representation
+\newcommand{\class}[1]{\textit{#1}}
+\newcommand{\code}[1]{#1}
+\newcommand{\inlinecode}[1]{\textit{#1}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem*{definition*}{Definition}
+\newtheorem{example}{Example}[theorem]
+
+\title{MatrixLib
+    %\thanks{Thanks note}
+    }
+\author{Darrion Thornburgh}
+\date{September 2021}
+
+\pagestyle{fancy}
+\headheight 15pt
+\fancyhf{}
+\rhead{Darrion Thornburgh}
+\lhead{MatrixLib}
+\rfoot{Page \thepage}
+
+\begin{document}
+\Hquad % creates spacing so intro doesn't hit top
+\section{Introduction}
+\subfile{sections/introduction}
+
+\section{The Quantity}
+\subfile{sections/numbersystem}
+
+\section{Matrices}
+\subfile{sections/matrices}
+
+\section{Algebra}
+\subfile{sections/algebra}
+
+\end{document}
